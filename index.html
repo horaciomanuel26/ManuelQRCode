@@ -3,69 +3,131 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ManuelQRCode</title>
+  <title>Manuell-QRCode</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background-color: #f4f4f9;
+    /* Reset de estilo */
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    .container {
-      text-align: center;
-      background: white;
+
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(to bottom, #007bff, #0056b3);
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      width: 90%;
-      max-width: 500px;
+      color: #333;
     }
-    input, select {
-      padding: 10px;
-      width: 80%;
-      margin-bottom: 10px;
+
+    .container {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+      width: 100%;
+      padding: 30px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #0056b3;
+    }
+
+    input[type="text"], input[type="color"] {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 15px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 10px;
       font-size: 16px;
+      transition: all 0.3s ease;
     }
+
+    input[type="text"]:focus, input[type="color"]:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      text-align: left;
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #333;
+    }
+
     button {
-      padding: 10px 20px;
-      font-size: 16px;
+      background-color: #007bff;
       color: white;
-      background-color: #007BFF;
       border: none;
-      border-radius: 5px;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      margin-top: 10px;
     }
+
     button:hover {
       background-color: #0056b3;
+      transform: translateY(-2px);
     }
+
     #qrcode {
-      margin-top: 20px;
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    .color-picker {
-      margin-bottom: 10px;
+
+    #downloadBtn {
+      display: none; /* Botão oculto inicialmente */
+      margin: 10px auto;
+      display: block;
+    }
+
+    /* Responsividade */
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      input[type="text"], button {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Gerador de QR Code</h1>
+    <!-- QR Code e botão de download como as primeiras divs -->
     <div id="qrcode"></div>
+    <button id="downloadBtn" onclick="downloadQRCode()">Baixar QR Code</button>
+    
+    <!-- Restante do conteúdo -->
+    <h1>Gerador de QR Code</h1>
     <input type="text" id="inputText" placeholder="Digite o texto ou URL">
-    <div class="color-picker">
-      <label for="color">Cor do QR Code:</label>
-      <input type="color" id="qrColor" value="#000000">
-    </div>
+    <label for="qrColor">Escolha a cor do QR Code:</label>
+    <input type="color" id="qrColor" value="#000000">
     <button onclick="generateQRCode()">Gerar QR Code</button>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   <script>
+    let generatedCanvas = null;
+
     function generateQRCode() {
       const inputText = document.getElementById("inputText").value;
       const qrCodeContainer = document.getElementById("qrcode");
@@ -73,26 +135,43 @@
 
       // Limpa o QR Code anterior
       qrCodeContainer.innerHTML = "";
+      generatedCanvas = null; // Reseta o canvas
 
       if (inputText.trim() !== "") {
         // Gera o QR Code com cor personalizada
         QRCode.toCanvas(document.createElement('canvas'), inputText, {
-          width: 400,
+          width: 300,
           margin: 2,
           color: {
             dark: qrColor, // Cor dos quadrados
-            light: "#ffffff", // Cor de fundo (fixo como branco)
+            light: "#ffffff", // Cor de fundo
           }
         }, (error, canvas) => {
           if (error) {
-            alert("Problema ao gerar QR Code");
+            alert("Erro ao gerar o QR Code. Tente novamente.");
             return;
           }
 
           qrCodeContainer.append(canvas);
+          generatedCanvas = canvas; // Armazena o canvas gerado
+          const downloadBtn = document.getElementById("downloadBtn");
+          downloadBtn.style.display = "block"; // Exibe botão de download
         });
       } else {
         alert("Por favor, insira um texto ou URL válido!");
+        const downloadBtn = document.getElementById("downloadBtn");
+        downloadBtn.style.display = "none"; // Oculta o botão de download
+      }
+    }
+
+    function downloadQRCode() {
+      if (generatedCanvas) {
+        const link = document.createElement("a");
+        link.href = generatedCanvas.toDataURL("image/png");
+        link.download = "qrcode.png";
+        link.click();
+      } else {
+        alert("Nenhum QR Code gerado para download!");
       }
     }
   </script>
