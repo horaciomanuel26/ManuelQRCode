@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ManuelQRCode</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f4f4f9;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 500px;
+    }
+    input, select {
+      padding: 10px;
+      width: 80%;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      color: white;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #qrcode {
+      margin-top: 20px;
+    }
+    .color-picker {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Gerador de QR Code</h1>
+    <div id="qrcode"></div>
+    <input type="text" id="inputText" placeholder="Digite o texto ou URL">
+    <div class="color-picker">
+      <label for="color">Cor do QR Code:</label>
+      <input type="color" id="qrColor" value="#000000">
+    </div>
+    <button onclick="generateQRCode()">Gerar QR Code</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script>
+    function generateQRCode() {
+      const inputText = document.getElementById("inputText").value;
+      const qrCodeContainer = document.getElementById("qrcode");
+      const qrColor = document.getElementById("qrColor").value;
+
+      // Limpa o QR Code anterior
+      qrCodeContainer.innerHTML = "";
+
+      if (inputText.trim() !== "") {
+        // Gera o QR Code com cor personalizada
+        QRCode.toCanvas(document.createElement('canvas'), inputText, {
+          width: 400,
+          margin: 2,
+          color: {
+            dark: qrColor, // Cor dos quadrados
+            light: "#ffffff", // Cor de fundo (fixo como branco)
+          }
+        }, (error, canvas) => {
+          if (error) {
+            alert("Problema ao gerar QR Code");
+            return;
+          }
+
+          qrCodeContainer.append(canvas);
+        });
+      } else {
+        alert("Por favor, insira um texto ou URL válido!");
+      }
+    }
+  </script>
+</body>
+</html>
