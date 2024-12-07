@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manuell-QRCode</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1680963895549422"
+    crossorigin="anonymous"></script>
   <style>
     /* Reset de estilo */
     * {
@@ -39,7 +42,8 @@
       color: #0056b3;
     }
 
-    input[type="text"], input[type="color"] {
+    input[type="text"],
+    input[type="color"] {
       width: 100%;
       padding: 12px 15px;
       margin-bottom: 15px;
@@ -49,7 +53,8 @@
       transition: all 0.3s ease;
     }
 
-    input[type="text"]:focus, input[type="color"]:focus {
+    input[type="text"]:focus,
+    input[type="color"]:focus {
       border-color: #007bff;
       outline: none;
     }
@@ -89,7 +94,8 @@
     }
 
     #downloadBtn {
-      display: none; /* Botão oculto inicialmente */
+      display: none;
+      /* Botão oculto inicialmente */
       margin: 10px auto;
       display: block;
     }
@@ -104,18 +110,20 @@
         font-size: 20px;
       }
 
-      input[type="text"], button {
+      input[type="text"],
+      button {
         font-size: 14px;
       }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <!-- QR Code e botão de download como as primeiras divs -->
     <div id="qrcode"></div>
     <button id="downloadBtn" onclick="downloadQRCode()">Baixar QR Code</button>
-    
+
     <!-- Restante do conteúdo -->
     <h1>Gerador de QR Code</h1>
     <input type="text" id="inputText" placeholder="Digite o texto ou URL">
@@ -176,4 +184,5 @@
     }
   </script>
 </body>
+
 </html>
